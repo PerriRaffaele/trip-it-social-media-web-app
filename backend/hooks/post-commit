@@ -1,0 +1,19 @@
+#!/bin/sh
+# Part 1
+stagedFiles=$(git diff HEAD^ HEAD --name-only)
+# Part 2
+echo "Running spotlessApply. Formatting code..."
+./gradlew :spotlessApply
+# Part 3
+changed=0
+for file in $stagedFiles; do
+  if test -f "$file"; then
+     git add $file
+     # echo $file
+     changed=1
+  fi
+done
+
+if [ $changed -eq 1 ]; then
+ git commit --no-verify -m "Spotless pass for `cat .git/COMMIT_EDITMSG`"
+fi
